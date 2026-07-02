@@ -1,39 +1,41 @@
-```markdown
 # 020 — Domain Model
 
-**Document:** 020 — Domain Model
-**Status:** Draft
-**Version:** 0.1.0
+**Document:** 020 — Domain Model  
+**Status:** Accepted  
+**Version:** 1.0.0  
 **Last Updated:** 2026-07-02
 
 ---
 
-## 1. Purpose
+# 1. Purpose
 
-This document defines the domain concepts that build upon the primitive concepts 
-from 010 — Ubiquitous Language.
+This document defines the domain concepts that build upon the ontology
+established in **010 — Ubiquitous Language**.
 
-For each concept, this document provides:
-* A semantic definition
-* Relationships to other concepts
+For each concept, this specification defines:
+
+- its semantic meaning
+- its semantic relationships to other concepts
 
 This document does not define:
-* Cardinality or constraints (030)
-* Workflows or state transitions (040)
-* Persistence or implementation patterns
+
+- invariants or cardinality (030)
+- workflows or state transitions (040)
+- implementation or architectural patterns
+- persistence or storage technologies
 
 ---
 
-## 2. Primitive Concepts
+# 2. Primitive Concepts
 
-The primitive concepts Evidence, Claim, and Actor are defined in 
-010 — Ubiquitous Language and are foundational to all concepts in this document.
+The primitive concepts **Evidence**, **Claim**, and **Actor** are defined by
+**010 — Ubiquitous Language** and are referenced throughout this document.
 
 ---
 
-## 3. Domain Concepts and Relationships
+# 3. Domain Concepts
 
-### Workspace
+## Workspace
 
 **Definition**
 
@@ -42,15 +44,17 @@ An administrative boundary for organizing collaborative work.
 **Relationships**
 
 ```
-Workspace ──organizes──> Project
-Workspace ──organizes──> Dataset
-Workspace ──organizes──> User
-Workspace ──organizes──> Team
+Workspace
+    organizes
+        Project
+        Dataset
+        User
+        Team
 ```
 
 ---
 
-### Project
+## Project
 
 **Definition**
 
@@ -59,14 +63,14 @@ A coordinated body of work performed on Evidence.
 **Relationships**
 
 ```
-Project ──performed on──> Dataset
-Project ──contains──> Task
-User ──assigned to──> Task
+Project
+    performed on
+        Dataset
 ```
 
 ---
 
-### Dataset
+## Dataset
 
 **Definition**
 
@@ -75,28 +79,34 @@ An organized collection of Evidence.
 **Relationships**
 
 ```
-Dataset ──organized as──> Asset
-Dataset ──organized as──> Scene
-Project ──performed on──> Dataset
+Dataset
+    organized as
+        Asset
+
+Dataset
+    may include
+        Scene
 ```
 
 ---
 
-### Scene
+## Scene
 
 **Definition**
 
-A contextual grouping of Assets.
+A contextual grouping of Evidence.
 
 **Relationships**
 
 ```
-Scene ──groups──> Asset
+Scene
+    groups
+        Asset
 ```
 
 ---
 
-### Asset
+## Asset
 
 **Definition**
 
@@ -105,13 +115,14 @@ A unit of Evidence.
 **Relationships**
 
 ```
-Asset ──instance of──> Evidence
-Annotation ──about──> Asset
+Annotation
+    about
+        Asset
 ```
 
 ---
 
-### Annotation
+## Annotation
 
 **Definition**
 
@@ -120,15 +131,22 @@ A Claim regarding Evidence.
 **Relationships**
 
 ```
-Annotation ──expresses──> Claim
-Annotation ──about──> Asset
-User ──creates──> Annotation
-Task ──produces──> Annotation
+Annotation
+    about
+        Asset
+
+User
+    creates
+        Annotation
+
+Task
+    produces
+        Annotation
 ```
 
 ---
 
-### Task
+## Task
 
 **Definition**
 
@@ -137,63 +155,68 @@ A request for work.
 **Relationships**
 
 ```
-Task ──belongs to──> Project
-Task ──produces──> Annotation
-User ──assigned to──> Task
+Task
+    produces
+        Annotation
 ```
 
 ---
 
-### User
+## User
 
 **Definition**
 
-An Actor in the context of this domain.
+An Actor within this domain.
 
 **Relationships**
 
 ```
-User ──creates──> Annotation
-User ──assigned to──> Task
-User ──member of──> Team
+User
+    creates
+        Annotation
 ```
 
 ---
 
-### Team
+## Team
 
 **Definition**
 
 A grouping of Users.
 
-**Relationships**
-
-```
-Team ──contains──> User
-Team ──part of──> Workspace
-```
-
 ---
 
-## 4. Semantic Constraints
+# 4. Semantic Constraints
 
-**SC-005**
+**SC-001**
 
 Incorrect
 
-> An Annotation is owned by a Task.
+> An Annotation contains Evidence.
 
 Correct
 
-> A Task produces an Annotation.
+> An Annotation is a Claim about Evidence.
 
 ---
 
-**SC-006**
+**SC-002**
 
 Incorrect
 
-> A Dataset is owned by a Project.
+> An Asset contains Annotations.
+
+Correct
+
+> Annotations are about Assets.
+
+---
+
+**SC-003**
+
+Incorrect
+
+> A Project owns a Dataset.
 
 Correct
 
@@ -201,167 +224,82 @@ Correct
 
 ---
 
-**SC-007**
+**SC-004**
 
 Incorrect
 
-> A User belongs to a Project.
+> A Task owns an Annotation.
 
 Correct
 
-> A User is assigned to a Task that belongs to a Project.
+> A Task produces an Annotation.
 
 ---
 
-**SC-008**
+**SC-005**
 
 Incorrect
 
-> An Asset contains an Annotation.
+> A User is a Claim.
 
 Correct
 
-> An Annotation is about an Asset.
+> A User creates Claims through Annotations.
 
 ---
 
-**SC-009**
-
-Incorrect
-
-> Evidence is organized into Datasets.
-
-Correct
-
-> Evidence is organized as Assets, which are organized into Datasets.
-
----
-
-**SC-010**
-
-Incorrect
-
-> Claims are stored.
-
-Correct
-
-> Claims are created and preserve their history.
-
----
-
-## Appendix A — Why These Concepts Exist
+# Appendix A — Domain Concept Rationale
 
 **Status:** Informative
 
-### Why Workspace?
+## Workspace
 
-Collaborative work often occurs in separate, isolated contexts. Workspace 
-provides a domain concept for administrative separation without prescribing 
-implementation (multi-tenancy, permissions, billing, scoping, etc.).
-
-### Why Project?
-
-Evidence often requires organized coordination of work. Project provides a 
-concept for grouping and choreographing that work without prescribing how it 
-is organized (by task, by workflow, by team, etc.).
-
-### Why Dataset?
-
-Evidence requires organization for management, sharing, governance, and 
-versioning. Dataset provides a concept for curated collections of Evidence 
-without prescribing the organization scheme.
-
-### Why Scene?
-
-Evidence often contains contextual relationships. Scene provides a concept for 
-grouping Evidence within a contextual boundary without prescribing what that 
-context is (temporal, spatial, logical, domain-specific, etc.).
-
-### Why Asset?
-
-Evidence requires granular units for annotation and processing. Asset provides 
-a concept for minimal observable units without prescribing modality, format, 
-or structure.
-
-### Why Annotation?
-
-Claims require concrete expression in the domain of knowledge production. 
-Annotation provides a concept for human-expressed Claims without prescribing 
-encoding, format, or representation.
-
-### Why Task?
-
-Work requires coordination, assignment, and tracking. Task provides a concept 
-for work requests without prescribing how work is organized, assigned, or 
-executed.
-
-### Why User?
-
-Claims require attribution for accountability and provenance. User provides a 
-concrete entity for that attribution in the context of this platform.
-
-### Why Team?
-
-Users often collaborate in groups. Team provides a concept for grouping Users 
-for organization, permission, or analysis without prescribing team structure 
-or semantics.
+Provides a domain concept for administrative separation of collaborative work.
 
 ---
 
-## Appendix B — Semantic Relationships Summary
+## Project
 
-**Status:** Informative
-
-The following table summarizes all semantic relationships defined in this 
-document.
-
-```
-Workspace ──organizes──> Project
-Workspace ──organizes──> Dataset
-Workspace ──organizes──> User
-Workspace ──organizes──> Team
-
-Project ──performed on──> Dataset
-Project ──contains──> Task
-
-Dataset ──organized as──> Asset
-Dataset ──organized as──> Scene
-
-Scene ──groups──> Asset
-
-Asset ──instance of──> Evidence
-
-Annotation ──expresses──> Claim
-Annotation ──about──> Asset
-
-Task ──belongs to──> Project
-Task ──produces──> Annotation
-
-User ──creates──> Annotation
-User ──assigned to──> Task
-User ──member of──> Team
-
-Team ──contains──> User
-Team ──part of──> Workspace
-```
+Provides a domain concept for coordinating work performed on Evidence.
 
 ---
 
-## Appendix C — Ubiquitous Language Reference
+## Dataset
 
-**Status:** Informative
+Provides a domain concept for organizing Evidence.
 
-The following terms are defined by this specification.
+---
 
-| Term | Definition |
-|------|-----------|
-| Annotation | A Claim regarding Evidence |
-| Asset | A unit of Evidence |
-| Dataset | An organized collection of Evidence |
-| Project | A coordinated body of work performed on Evidence |
-| Scene | A contextual grouping of Assets |
-| Task | A request for work |
-| Team | A grouping of Users |
-| User | An Actor in the context of this domain |
-| Workspace | An administrative boundary for organizing collaborative work |
-```
+## Scene
+
+Provides a domain concept for contextual organization of Evidence.
+
+---
+
+## Asset
+
+Provides a domain concept representing a unit of Evidence.
+
+---
+
+## Annotation
+
+Provides a domain concept representing the expression of a Claim regarding Evidence.
+
+---
+
+## Task
+
+Provides a domain concept representing requested work.
+
+---
+
+## User
+
+Provides a domain concept representing an Actor participating in the platform.
+
+---
+
+## Team
+
+Provides a domain concept representing collaborative groups of Users.
