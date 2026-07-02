@@ -30,10 +30,10 @@ that precede it.
 |----|----------|----------|--------|---------|
 | 000 | Vision | Why does the platform exist? | Accepted | 1.0.0 |
 | 010 | Ubiquitous Language | What concepts exist? | Accepted | 1.0.0 |
-| 020 | Domain Model | How are concepts realized? | Draft | 0.1.0 |
-| 030 | Invariants | What must always be true? | Planned | — |
-| 040 | Workflows | How do concepts evolve? | Planned | — |
-| 050 | Capabilities | How is the platform extended? | Planned | — |
+| 020 | Domain Model | How are concepts realized? | Accepted | 1.0.0 |
+| 030 | Invariants | What must always be true? | Accepted | 1.0.0 |
+| 040 | Workflows | How do concepts evolve? | Accepted | 1.0.0 |
+| 050 | Capabilities | How is the platform extended? | Accepted | 1.0.0 |
 
 ---
 
